@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 10 Lis 2020, 13:57
--- Wersja serwera: 10.4.14-MariaDB
--- Wersja PHP: 7.4.9
+-- Czas generowania: 10 Lis 2020, 15:54
+-- Wersja serwera: 10.4.11-MariaDB
+-- Wersja PHP: 7.4.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -41,8 +42,12 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`mail`, `login`, `password`, `name`, `last_name`, `pesel`) VALUES
-('agap@o2.pl', 'agaPawlowska', 'aagusia99', 'Witold', 'Gombrowicz', 987653043),
-('krzysztofkowalski@interia.pl', 'krzysiu1234', 'krzycha1234', 'Krzysztof', 'Kowalski', 123456789);
+('akowalska@gmail.com', 'akowalska', 'akowalska', 'Agnieszka', 'Kowalska', 931654356),
+('anowak@o2.pl', 'anowak', 'anowak', 'Adam', 'Nowak', 987653043),
+('bkowalska@gmail.com', 'bkowalska', 'bkowalska', 'Brygida', 'Kowalska', 771654377),
+('bnowak@onet.pl', 'bnowak', 'bnowak', 'Barbara', 'Nowak', 870917874),
+('cnowak@o2.pl', 'cnowak', 'cnowak', 'Celina', 'Nowak', 977653043),
+('dnowak@onet.pl', 'dnowak', 'dnowak', 'Danuta', 'Nowak', 850917834);
 
 -- --------------------------------------------------------
 
@@ -59,6 +64,18 @@ CREATE TABLE `book` (
   `number_of_pages` int(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Zrzut danych tabeli `book`
+--
+
+INSERT INTO `book` (`isbn`, `title`, `author`, `category`, `publisher`, `number_of_pages`) VALUES
+(1000000, 'Lalka', 'Bolesław Prus', 'Powieść', 'Zielona Sowa', 650),
+(1000001, 'Antek', 'Bolesław Prus', 'Nowela', 'Zielona Sowa', 30),
+(1000002, 'Katarynka', 'Bolesław Prus', 'Nowela', 'Greg', 25),
+(1000003, 'Krzyżacy', 'Henryk Sienkiewicz', 'Powieść', 'Greg', 490),
+(1000004, 'Noce i dnie', 'Maria Dąbrowska', 'Powieść', 'Greg', 490),
+(1000005, 'Quo vadis', 'Henryk Sienkiewicz', 'Powieść', 'Greg', 410);
+
 -- --------------------------------------------------------
 
 --
@@ -70,6 +87,24 @@ CREATE TABLE `book_item` (
   `book_id` bigint(20) UNSIGNED NOT NULL,
   `book_lending_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `book_item`
+--
+
+INSERT INTO `book_item` (`signature`, `book_id`, `book_lending_id`) VALUES
+(1000, 1000001, NULL),
+(1001, 1000001, NULL),
+(1002, 1000002, NULL),
+(1003, 1000002, NULL),
+(1004, 1000002, NULL),
+(1005, 1000002, NULL),
+(1006, 1000003, NULL),
+(1007, 1000003, NULL),
+(1008, 1000004, NULL),
+(1009, 1000004, NULL),
+(1010, 1000005, NULL),
+(1011, 1000005, NULL);
 
 -- --------------------------------------------------------
 
@@ -85,6 +120,14 @@ CREATE TABLE `book_lending` (
   `lended_to` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Zrzut danych tabeli `book_lending`
+--
+
+INSERT INTO `book_lending` (`book_lending_id`, `book_item_id`, `client_id`, `lended_from`, `lended_to`) VALUES
+(1, 1000, 1, '2020-11-01', '2020-11-30'),
+(2, 1000, 2, '2020-11-01', '2020-11-30');
+
 -- --------------------------------------------------------
 
 --
@@ -97,6 +140,14 @@ CREATE TABLE `book_reservation` (
   `date_from` date NOT NULL,
   `date_to` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `book_reservation`
+--
+
+INSERT INTO `book_reservation` (`book_item_id`, `client_id`, `date_from`, `date_to`) VALUES
+(1000000, 3, '2020-11-01', '2020-11-30'),
+(1000000, 4, '2020-11-01', '2020-11-30');
 
 -- --------------------------------------------------------
 
@@ -114,7 +165,10 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`library_card`, `account_id`) VALUES
-(1, 'agap@o2.pl');
+(1, 'anowak@o2.pl'),
+(2, 'bnowak@onet.pl'),
+(3, 'cnowak@o2.pl'),
+(4, 'dnowak@onet.pl');
 
 -- --------------------------------------------------------
 
@@ -132,7 +186,8 @@ CREATE TABLE `worker` (
 --
 
 INSERT INTO `worker` (`worker_id`, `account_id`) VALUES
-(1, 'krzysztofkowalski@interia.pl');
+(1, 'akowalska@gmail.com'),
+(2, 'bkowalska@gmail.com');
 
 --
 -- Indeksy dla zrzutów tabel
@@ -195,7 +250,7 @@ ALTER TABLE `worker`
 -- AUTO_INCREMENT dla tabeli `book_lending`
 --
 ALTER TABLE `book_lending`
-  MODIFY `book_lending_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `book_lending_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ograniczenia dla zrzutów tabel
