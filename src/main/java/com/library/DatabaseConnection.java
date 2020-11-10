@@ -16,7 +16,8 @@ public class DatabaseConnection {
     private final static String PASS = "wzorceprojektowe";
 
     // Funkcja z opisem dla Bartusia ;3 - zalatwie od razu pobieranie klientow i pracownikow
-    public static void inflateUsers(List<Client> clients, List<Worker> workers) throws GhostAccountException {
+    public static List<Account> inflateUsers() throws GhostAccountException {
+        List<Account> accounts = new ArrayList<>();
         try {
             //uzyskiwanie polaczenia z baza danych Bartusiu
             connection = DriverManager.getConnection(DATABASE,USER,PASS);
@@ -44,7 +45,7 @@ public class DatabaseConnection {
                 ResultSet clientResult = preparedStatement.executeQuery();
                 if (clientResult.first()){
                     long libraryCard = clientResult.getLong("library_card");
-                    clients.add(new Client(mail,login,password,name,lastName,pesel,libraryCard));
+                    accounts.add(new Client(mail,login,password,name,lastName,pesel,libraryCard));
 
                 }else{
                     query = "SELECT worker_id FROM worker WHERE `account_id`=?";
@@ -57,7 +58,7 @@ public class DatabaseConnection {
                     if(!workerResult.first()) throw new GhostAccountException();
 
                     long workerId = workerResult.getLong("worker_id");
-                    workers.add(new Worker(mail,login,password,name,lastName,pesel,workerId));
+                    accounts.add(new Worker(mail,login,password,name,lastName,pesel,workerId));
                 }
             }
 
@@ -66,11 +67,11 @@ public class DatabaseConnection {
         } catch(Exception e){
             e.printStackTrace();
         }
-
+        return accounts;
     }
 
     public static List<Book> getBooks(){
-        List<Book> books = null;
+        List<Book> books = new ArrayList<>();
 
         try {
             connection = DriverManager.getConnection(DATABASE,USER,PASS);
@@ -81,14 +82,16 @@ public class DatabaseConnection {
                 long isbn = bookSet.getLong("isbn");
                 String title = bookSet.getString("title");
                 String author = bookSet.getString("author");
-                String category = bookSet.getString("");
+                String category = bookSet.getString("category");
                 String publisher = bookSet.getString("publisher");
                 int numberOfPages = bookSet.getInt("number_of_pages");
 
                 List<BookItem> bookItems = getBookItems(isbn);
                 if(bookItems == null)
                     continue;
-                books.add(new Book(title,isbn,author,category,publisher,numberOfPages,bookItems));
+                else {
+                    books.add(new Book(title, isbn, author, category, publisher, numberOfPages, bookItems));
+                }
 
             }
 
@@ -101,7 +104,7 @@ public class DatabaseConnection {
     }
 
     private static List<BookItem> getBookItems(long isbn) throws SQLException {
-        List<BookItem> bookItems= null;
+        List<BookItem> bookItems= new ArrayList<>();
         String query = "SELECT signature FROM book_item WHERE book_id=?";
         PreparedStatement bookItemStatement = connection.prepareStatement(query);
         bookItemStatement.setLong(1,isbn);
@@ -114,7 +117,7 @@ public class DatabaseConnection {
 
 
             long signature = bookItemSet.getLong("signature");
-
+            bookItems.add(new BookItem(signature));
         }
         if (!notEmpty)
             return null;
@@ -122,7 +125,13 @@ public class DatabaseConnection {
         return bookItems;
     }
 
-    public static void inflateReservations(List<Book> books, List<Client> clients) throws SQLException {
+    public static void inflateReservations(List<Book> books, List<Account> users) throws SQLException {
+
+        List<Client> clients = new ArrayList<>();
+        for (Account user : users) {
+            if(user instanceof Client)
+                clients.add((Client) user);
+        }
         connection = DriverManager.getConnection(DATABASE, USER, PASS);
         Statement statement = connection.createStatement();
         ResultSet reservationSet = statement.executeQuery("SELECT * FROM book_reservation");
@@ -141,17 +150,26 @@ public class DatabaseConnection {
                 }
             }
             for (Client client1 : clients) {
-                if(client1.getLibraryCard() == client){
+
+                client1 = (Client) client1;
+                if (client1.getLibraryCard() == client) {
                     client1.addReservation(reservation);
                     break;
                 }
+
             }
         }
 
         connection.close();
     }
 
-    public static void inflateLendings(List<Book> books, List<Client> clients) throws SQLException{
+    public static void inflateLendings(List<Book> books, List<Account> users) throws SQLException{
+
+        List<Client> clients = new ArrayList<>();
+        for (Account user : users) {
+            if(user instanceof Client)
+                clients.add((Client) user);
+        }
         connection = DriverManager.getConnection(DATABASE, USER, PASS);
         Statement statement = connection.createStatement();
         ResultSet lendingSet = statement.executeQuery("SELECT * FROM book_lending");
@@ -159,8 +177,8 @@ public class DatabaseConnection {
             int bookLendingId = lendingSet.getInt("book_lending_id");
             long bookItem = lendingSet.getLong("book_item_id");
             long client = lendingSet.getLong("client_id");
-            Date from = lendingSet.getDate("date_from");
-            Date to = lendingSet.getDate("date_to");
+            Date from = lendingSet.getDate("lended_from");
+            Date to = lendingSet.getDate("lended_to");
             BookLending lending = new BookLending(bookLendingId,bookItem, client, from, to);
             for (Book book : books) {
                 for (BookItem item : book.getBookItems()) {

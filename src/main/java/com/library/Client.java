@@ -13,6 +13,7 @@ public class Client  extends Account{
         super(mail, login, password, name, lastName, pesel);
         this.libraryCard = libraryCard;
         bookReservations = new ArrayList<>();
+        bookLendings = new ArrayList<>();
     }
 
     public boolean verify() {

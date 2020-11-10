@@ -25,5 +25,7 @@ public class Book {
     public List<BookItem> getBookItems(){
         return bookItems;
     }
-
+    public long getIsbn(){
+        return isbn;
+    }
 }

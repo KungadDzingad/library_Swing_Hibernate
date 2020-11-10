@@ -34,4 +34,8 @@ public class BookItem {
         if(lending == null)
             this.lending = lending;
     }
+
+    public List<BookReservation> getBookReservations(){
+        return bookReservations;
+    }
 }
