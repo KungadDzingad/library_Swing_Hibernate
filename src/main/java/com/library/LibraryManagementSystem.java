@@ -3,6 +3,9 @@ package com.library;
 import com.library.exceptions.GhostAccountException;
 import com.library.exceptions.WrongLoginDataException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.xml.crypto.Data;
 import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.util.List;
@@ -21,16 +24,12 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
         getData();
 
-        while(true){
-            loggedUser = welcomeAction();
-            if(loggedUser == null){
-                System.out.println("Do widzenia");
-                break;
-            }else if(loggedUser instanceof Client)
-                clientAction();
-            else if (loggedUser instanceof Worker)
-                workerAction();
+        books = DatabaseConnection.initialiseBooks();
+        for (Book book : books) {
+            System.out.println(book.getIsbn());
         }
+
+        DatabaseConnection.factoryClose();
     }
 
     private static void clientAction(){
@@ -39,20 +38,19 @@ public class LibraryManagementSystem {
 
     private static void workerAction(){
 
-        
     }
 
     private static void getData(){
-        try {
-
-            users = DatabaseConnection.inflateUsers();
-            books = DatabaseConnection.getBooks();
-            DatabaseConnection.inflateLendings(books,users);
-            DatabaseConnection.inflateReservations(books,users);
-
-        } catch (GhostAccountException | SQLException e) {
-            System.err.println("Try again : )");
-        }
+//        try {
+//
+//            users = DatabaseConnection.inflateUsers();
+//            books = DatabaseConnection.getBooks();
+//            DatabaseConnection.inflateLendings(books,users);
+//            DatabaseConnection.inflateReservations(books,users);
+//
+//        } catch (GhostAccountException | SQLException e) {
+//            System.err.println("Try again : )");
+//        }
     }
 
     private static Account login() throws WrongLoginDataException {
@@ -85,7 +83,6 @@ public class LibraryManagementSystem {
                         break;
                     } catch (WrongLoginDataException e) {
                         e.printStackTrace();
-
                     }
                     break;
                 }
@@ -97,7 +94,12 @@ public class LibraryManagementSystem {
             }
             return user;
         }
+    }
 
+    private static Book createBook(String title, long isbn, String author, String category, String publisher, int numberOfPages) {
+        Book book = new Book(title,isbn,author,category,publisher,numberOfPages);
+        DatabaseConnection.saveBook(book);
+        return book;
     }
 
 }
