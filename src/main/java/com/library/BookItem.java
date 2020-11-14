@@ -1,41 +1,63 @@
 package com.library;
 
+import com.sun.istack.Nullable;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookItem {
-    private long signature;
-    private BookLending lending;
-    private List<BookReservation> bookReservations;
+@Entity
+@Table(name="book_item")
+public class BookItem implements Serializable {
 
-    public BookItem(long signature) {
+    @Id
+    @Column(name="signature",
+            nullable = false,
+            unique = true
+    )
+    private long signature;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="book_id")
+    private Book book;
+
+    @OneToMany(mappedBy = "bookItem",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL
+    )
+    private List<BookReservation> reservations = new ArrayList<>();
+
+    @OneToOne(orphanRemoval = true)
+    @JoinColumn(name="book_lending_id")
+    private BookLending lending;
+
+    public BookItem(long signature, Book book) {
         this.signature = signature;
+        this.book = book;
+        this.reservations = new ArrayList<>();
         this.lending = null;
-        this.bookReservations = new ArrayList<>();
     }
 
-    public void lend(BookLending lending){
-        this.lending = lending;
+    public BookItem(){}
+
+    public long getSignature() {
+        return signature;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public List<BookReservation> getReservations() {
+        return reservations;
     }
 
     public boolean isLended(){
         return lending != null;
     }
 
-    public long getSignature(){
-        return signature;
-    }
-
-    public void addReservation(BookReservation res){
-        bookReservations.add(res);
-    }
-
-    public void setLending(BookLending lending){
-        if(lending == null)
-            this.lending = lending;
-    }
-
-    public List<BookReservation> getBookReservations(){
-        return bookReservations;
+    public BookLending getLending(){
+        return lending;
     }
 }

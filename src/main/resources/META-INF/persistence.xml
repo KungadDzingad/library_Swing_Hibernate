@@ -9,6 +9,12 @@
 
     <!-- Define the object that should be persisted in the database -->
     <class>com.library.Book</class>
+    <class>com.library.BookItem</class>
+    <class>com.library.BookReservation</class>
+    <class>com.library.BookLending</class>
+    <class>com.library.Account</class>
+    <class>com.library.Client</class>
+    <class>com.library.Worker</class>
 
     <properties>
         <!-- Driver for DB database -->

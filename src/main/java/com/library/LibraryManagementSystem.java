@@ -1,13 +1,8 @@
 package com.library;
 
-import com.library.exceptions.GhostAccountException;
 import com.library.exceptions.WrongLoginDataException;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.xml.crypto.Data;
-import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,9 +19,29 @@ public class LibraryManagementSystem {
     public static void main(String[] args) {
         getData();
 
-        books = DatabaseConnection.initialiseBooks();
+        BookItem item = createBookItem(12000000,books.get(1));
         for (Book book : books) {
-            System.out.println(book.getIsbn());
+            for (BookItem bookItem : book.getBookItems()) {
+                System.out.println(bookItem.getSignature());
+            }
+            System.out.println();
+        }
+
+
+        deleteBookItem(item);
+        System.out.println("-----------------");
+
+        books = DatabaseConnection.getBooks();
+
+        for (Book book : books) {
+            for (BookItem bookItem : book.getBookItems()) {
+                if(bookItem.isLended()) {
+                    System.out.print(bookItem.getLending().getClient().getLogin());
+                    System.out.print(": ");
+                    System.out.print(bookItem.getSignature());
+                }
+            }
+            System.out.println("\n");
         }
 
         DatabaseConnection.factoryClose();
@@ -41,16 +56,8 @@ public class LibraryManagementSystem {
     }
 
     private static void getData(){
-//        try {
-//
-//            users = DatabaseConnection.inflateUsers();
-//            books = DatabaseConnection.getBooks();
-//            DatabaseConnection.inflateLendings(books,users);
-//            DatabaseConnection.inflateReservations(books,users);
-//
-//        } catch (GhostAccountException | SQLException e) {
-//            System.err.println("Try again : )");
-//        }
+        books = DatabaseConnection.getBooks();
+        users = DatabaseConnection.getAccounts();
     }
 
     private static Account login() throws WrongLoginDataException {
@@ -102,4 +109,18 @@ public class LibraryManagementSystem {
         return book;
     }
 
+    private static BookItem createBookItem(long signature, Book book){
+        BookItem bookItem = new BookItem(signature,book);
+        DatabaseConnection.saveBookItem(bookItem);
+        return bookItem;
+    }
+
+    private static void deleteBookItem(BookItem item){
+        for (Book book : books) {
+            for (BookItem bookItem : book.getBookItems()) {
+                if(bookItem.equals(item))DatabaseConnection.removeBookitem(item);
+            }
+        }
+        books = DatabaseConnection.getBooks();
+    }
 }

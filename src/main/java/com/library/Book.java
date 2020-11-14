@@ -1,6 +1,7 @@
 package com.library;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
@@ -27,7 +28,11 @@ public class Book implements Serializable{
     @Column(name="number_of_pages", nullable = false)
     private int numberOfPages;
 
-    //private List<BookItem> bookItems;
+    @OneToMany(mappedBy = "book",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL
+    )
+    private List<BookItem> bookItems  = new ArrayList<>();
 
     public Book(String title, long isbn, String author, String category, String publisher, int numberOfPages) {
         this.title = title;
@@ -43,10 +48,30 @@ public class Book implements Serializable{
 
     }
 
-//    public List<BookItem> getBookItems(){
-//        return bookItems;
-//    }
     public long getIsbn(){
         return isbn;
+    }
+    public List<BookItem> getBookItems(){
+        return bookItems;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public int getNumberOfPages() {
+        return numberOfPages;
     }
 }
