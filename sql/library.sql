@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 10 Lis 2020, 15:54
--- Wersja serwera: 10.4.11-MariaDB
--- Wersja PHP: 7.4.3
+-- Czas generowania: 14 Lis 2020, 21:31
+-- Wersja serwera: 10.4.14-MariaDB
+-- Wersja PHP: 7.4.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -74,7 +73,8 @@ INSERT INTO `book` (`isbn`, `title`, `author`, `category`, `publisher`, `number_
 (1000002, 'Katarynka', 'Bolesław Prus', 'Nowela', 'Greg', 25),
 (1000003, 'Krzyżacy', 'Henryk Sienkiewicz', 'Powieść', 'Greg', 490),
 (1000004, 'Noce i dnie', 'Maria Dąbrowska', 'Powieść', 'Greg', 490),
-(1000005, 'Quo vadis', 'Henryk Sienkiewicz', 'Powieść', 'Greg', 410);
+(1000005, 'Quo vadis', 'Henryk Sienkiewicz', 'Powieść', 'Greg', 410),
+(1000123, 'qqwe', 'qweqweq', 'qweqe', 'asdadasd', 3);
 
 -- --------------------------------------------------------
 
@@ -85,7 +85,7 @@ INSERT INTO `book` (`isbn`, `title`, `author`, `category`, `publisher`, `number_
 CREATE TABLE `book_item` (
   `signature` bigint(20) UNSIGNED NOT NULL,
   `book_id` bigint(20) UNSIGNED NOT NULL,
-  `book_lending_id` int(11) DEFAULT NULL
+  `book_lending_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -93,7 +93,7 @@ CREATE TABLE `book_item` (
 --
 
 INSERT INTO `book_item` (`signature`, `book_id`, `book_lending_id`) VALUES
-(1000, 1000001, NULL),
+(1000, 1000001, 1),
 (1001, 1000001, NULL),
 (1002, 1000002, NULL),
 (1003, 1000002, NULL),
@@ -104,7 +104,8 @@ INSERT INTO `book_item` (`signature`, `book_id`, `book_lending_id`) VALUES
 (1008, 1000004, NULL),
 (1009, 1000004, NULL),
 (1010, 1000005, NULL),
-(1011, 1000005, NULL);
+(1011, 1000005, NULL),
+(12000000, 1000001, NULL);
 
 -- --------------------------------------------------------
 
@@ -113,7 +114,7 @@ INSERT INTO `book_item` (`signature`, `book_id`, `book_lending_id`) VALUES
 --
 
 CREATE TABLE `book_lending` (
-  `book_lending_id` int(11) NOT NULL,
+  `book_lending_id` bigint(20) NOT NULL,
   `book_item_id` bigint(20) UNSIGNED NOT NULL,
   `client_id` bigint(20) NOT NULL,
   `lended_from` date NOT NULL,
@@ -125,8 +126,7 @@ CREATE TABLE `book_lending` (
 --
 
 INSERT INTO `book_lending` (`book_lending_id`, `book_item_id`, `client_id`, `lended_from`, `lended_to`) VALUES
-(1, 1000, 1, '2020-11-01', '2020-11-30'),
-(2, 1000, 2, '2020-11-01', '2020-11-30');
+(1, 1000, 1, '2020-11-01', '2020-11-30');
 
 -- --------------------------------------------------------
 
@@ -135,6 +135,7 @@ INSERT INTO `book_lending` (`book_lending_id`, `book_item_id`, `client_id`, `len
 --
 
 CREATE TABLE `book_reservation` (
+  `book_reservation_id` bigint(20) NOT NULL,
   `book_item_id` bigint(20) UNSIGNED NOT NULL,
   `client_id` bigint(20) NOT NULL,
   `date_from` date NOT NULL,
@@ -145,9 +146,9 @@ CREATE TABLE `book_reservation` (
 -- Zrzut danych tabeli `book_reservation`
 --
 
-INSERT INTO `book_reservation` (`book_item_id`, `client_id`, `date_from`, `date_to`) VALUES
-(1000000, 3, '2020-11-01', '2020-11-30'),
-(1000000, 4, '2020-11-01', '2020-11-30');
+INSERT INTO `book_reservation` (`book_reservation_id`, `book_item_id`, `client_id`, `date_from`, `date_to`) VALUES
+(1, 1000, 3, '2020-11-02', '2020-11-18'),
+(2, 1000, 4, '2020-11-26', '2020-12-10');
 
 -- --------------------------------------------------------
 
@@ -218,21 +219,22 @@ ALTER TABLE `book_item`
 --
 ALTER TABLE `book_lending`
   ADD PRIMARY KEY (`book_lending_id`),
-  ADD KEY `client_id` (`client_id`),
-  ADD KEY `book_item_id` (`book_item_id`);
+  ADD KEY `book_item_id` (`book_item_id`),
+  ADD KEY `client_id` (`client_id`);
 
 --
 -- Indeksy dla tabeli `book_reservation`
 --
 ALTER TABLE `book_reservation`
-  ADD PRIMARY KEY (`book_item_id`,`client_id`),
+  ADD PRIMARY KEY (`book_reservation_id`),
+  ADD KEY `book_item_id` (`book_item_id`),
   ADD KEY `client_id` (`client_id`);
 
 --
 -- Indeksy dla tabeli `client`
 --
 ALTER TABLE `client`
-  ADD PRIMARY KEY (`library_card`),
+  ADD UNIQUE KEY `library_card` (`library_card`),
   ADD KEY `account_id` (`account_id`);
 
 --
@@ -250,7 +252,13 @@ ALTER TABLE `worker`
 -- AUTO_INCREMENT dla tabeli `book_lending`
 --
 ALTER TABLE `book_lending`
-  MODIFY `book_lending_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `book_lending_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT dla tabeli `book_reservation`
+--
+ALTER TABLE `book_reservation`
+  MODIFY `book_reservation_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ograniczenia dla zrzutów tabel
@@ -261,21 +269,21 @@ ALTER TABLE `book_lending`
 --
 ALTER TABLE `book_item`
   ADD CONSTRAINT `book_item_ibfk_1` FOREIGN KEY (`book_id`) REFERENCES `book` (`isbn`),
-  ADD CONSTRAINT `book_item_ibfk_2` FOREIGN KEY (`book_lending_id`) REFERENCES `book_lending` (`book_lending_id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `book_item_ibfk_2` FOREIGN KEY (`book_lending_id`) REFERENCES `book_lending` (`book_lending_id`);
 
 --
 -- Ograniczenia dla tabeli `book_lending`
 --
 ALTER TABLE `book_lending`
-  ADD CONSTRAINT `book_lending_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `client` (`library_card`),
-  ADD CONSTRAINT `book_lending_ibfk_2` FOREIGN KEY (`book_item_id`) REFERENCES `book_item` (`signature`);
+  ADD CONSTRAINT `book_lending_ibfk_2` FOREIGN KEY (`book_item_id`) REFERENCES `book_item` (`signature`),
+  ADD CONSTRAINT `book_lending_ibfk_3` FOREIGN KEY (`client_id`) REFERENCES `client` (`library_card`);
 
 --
 -- Ograniczenia dla tabeli `book_reservation`
 --
 ALTER TABLE `book_reservation`
-  ADD CONSTRAINT `book_reservation_ibfk_1` FOREIGN KEY (`book_item_id`) REFERENCES `book` (`isbn`),
-  ADD CONSTRAINT `book_reservation_ibfk_2` FOREIGN KEY (`client_id`) REFERENCES `client` (`library_card`);
+  ADD CONSTRAINT `book_reservation_ibfk_3` FOREIGN KEY (`book_item_id`) REFERENCES `book_item` (`signature`),
+  ADD CONSTRAINT `book_reservation_ibfk_4` FOREIGN KEY (`client_id`) REFERENCES `client` (`library_card`);
 
 --
 -- Ograniczenia dla tabeli `client`
