@@ -16,10 +16,15 @@ public class LoginFrame implements GetsPanel{
     private JPasswordField passwordField;
     private JTextField loginField;
     private JCheckBox jestemPracownikiemCheckBox;
+    private JLabel wrongDataLabel;
 
 
     public LoginFrame( ){
+        wrongDataLabel.setVisible(false);
+        initListeners();
+    }
 
+    private void initListeners(){
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -31,6 +36,9 @@ public class LoginFrame implements GetsPanel{
                     boolean logged = LibraryManagementSystem.getSystem().loginUser(login,password);
                     if(logged) {
                         MainFrame.getFrame().setPanel(new ClientFrame());
+                    }else{
+                        wrongDataLabel.setVisible(true);
+                        MainFrame.getFrame().pack();
                     }
                 }
             }

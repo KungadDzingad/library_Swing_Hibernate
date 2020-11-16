@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 14 Lis 2020, 21:31
+-- Czas generowania: 16 Lis 2020, 21:31
 -- Wersja serwera: 10.4.14-MariaDB
 -- Wersja PHP: 7.4.9
 
@@ -46,7 +46,9 @@ INSERT INTO `account` (`mail`, `login`, `password`, `name`, `last_name`, `pesel`
 ('bkowalska@gmail.com', 'bkowalska', 'bkowalska', 'Brygida', 'Kowalska', 771654377),
 ('bnowak@onet.pl', 'bnowak', 'bnowak', 'Barbara', 'Nowak', 870917874),
 ('cnowak@o2.pl', 'cnowak', 'cnowak', 'Celina', 'Nowak', 977653043),
-('dnowak@onet.pl', 'dnowak', 'dnowak', 'Danuta', 'Nowak', 850917834);
+('dnowak@onet.pl', 'dnowak', 'dnowak', 'Danuta', 'Nowak', 850917834),
+('enowak@o2.pl', 'enowak', 'enowak', 'Ewa', 'Nowak', 12345551),
+('fnowak@o2.pl', 'fnowak', 'fnowak', 'Franciszek', 'Nowak', 12344414444);
 
 -- --------------------------------------------------------
 
@@ -148,7 +150,8 @@ CREATE TABLE `book_reservation` (
 
 INSERT INTO `book_reservation` (`book_reservation_id`, `book_item_id`, `client_id`, `date_from`, `date_to`) VALUES
 (1, 1000, 3, '2020-11-02', '2020-11-18'),
-(2, 1000, 4, '2020-11-26', '2020-12-10');
+(18, 1010, 4, '2021-02-12', '2021-03-12'),
+(20, 1000, 4, '2021-02-01', '2021-03-01');
 
 -- --------------------------------------------------------
 
@@ -169,7 +172,9 @@ INSERT INTO `client` (`library_card`, `account_id`) VALUES
 (1, 'anowak@o2.pl'),
 (2, 'bnowak@onet.pl'),
 (3, 'cnowak@o2.pl'),
-(4, 'dnowak@onet.pl');
+(4, 'dnowak@onet.pl'),
+(5, 'enowak@o2.pl'),
+(6, 'fnowak@o2.pl');
 
 -- --------------------------------------------------------
 
@@ -258,7 +263,13 @@ ALTER TABLE `book_lending`
 -- AUTO_INCREMENT dla tabeli `book_reservation`
 --
 ALTER TABLE `book_reservation`
-  MODIFY `book_reservation_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `book_reservation_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT dla tabeli `client`
+--
+ALTER TABLE `client`
+  MODIFY `library_card` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Ograniczenia dla zrzutów tabel

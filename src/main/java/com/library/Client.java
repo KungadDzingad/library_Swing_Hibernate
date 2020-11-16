@@ -14,7 +14,9 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name="account_id")
 public class Client  extends Account {
 
+
     @Column(name="library_card",nullable = false,unique = true)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long libraryCard;
 
     @OneToMany(mappedBy = "client",
@@ -29,9 +31,8 @@ public class Client  extends Account {
     )
     private List<BookLending> bookLendings = new ArrayList<>();
 
-    public Client(String mail, String login, String password, String name, String lastName, long pesel, long libraryCard) {
+    public Client(String mail, String login, String password, String name, String lastName, long pesel) {
         super(mail, login, password, name, lastName, pesel);
-        this.libraryCard = libraryCard;
         bookReservations = new ArrayList<>();
         bookLendings = new ArrayList<>();
     }

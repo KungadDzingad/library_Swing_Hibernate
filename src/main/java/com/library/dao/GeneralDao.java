@@ -7,6 +7,7 @@ import com.library.LibraryManagementSystem;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import java.util.List;
 
 public abstract class GeneralDao<T> implements DAO<T>{
 
@@ -47,6 +48,15 @@ public abstract class GeneralDao<T> implements DAO<T>{
                 transaction.rollback();
             e.printStackTrace();
         }
+    }
 
+    @Override
+    public T refresh(T t) {
+        return null;
+    }
+
+    @Override
+    public List<T> refresh(List<T> t) {
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import com.library.dao.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.util.List;
 
@@ -46,11 +47,26 @@ public class DatabaseConnection {
     }
 
     public static void removeReservation(BookReservation reservation){
-        System.out.println("elo");
         new BookReservationDao().delete(reservation);
     }
 
     public static  void factoryClose(){
         ENTITY_MANAGER_FACTORY.close();
+    }
+
+    public static void saveUser(Account account){
+        new AccountDao().save(account);
+    }
+
+    public static Account refreshUser(Account user){
+        return new AccountDao().refresh(user);
+    }
+
+    public static List<Book> refreshBooks(List<Book> books){
+        return new BookDao().refresh(books);
+    }
+
+    public static List<Account> refreshUsers(List<Account> users){
+        return new AccountDao().refresh(users);
     }
 }

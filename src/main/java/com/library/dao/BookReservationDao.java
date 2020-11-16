@@ -30,6 +30,7 @@ public class BookReservationDao extends GeneralDao<BookReservation> {
             entityManager.remove(res);
             transaction.commit();
 
+
         } catch (Exception e) {
             if(transaction!=null)
                 transaction.rollback();

@@ -65,21 +65,20 @@ public class LibraryManagementSystem {
                 if(bookItem.equals(item))DatabaseConnection.removeBookitem(item);
             }
         }
-        books = DatabaseConnection.getBooks();
+        refreshData();
     }
 
     public void addClientReservation(Book book, Date from, Date to)throws BookNotAvailableException {
         if (loggedUser instanceof Client) {
             BookReservation bookReservation = loggedUser.reserveBook(book,from,to);
             DatabaseConnection.saveBookReservation(bookReservation);
-            books = DatabaseConnection.getBooks();
-            users = DatabaseConnection.getAccounts();
+            refreshData();
         }
     }
 
     public void cancelReservation(BookReservation reservation){
         DatabaseConnection.removeReservation(reservation);
-        getData();
+        refreshData();
     }
 
     public List<Book> getBooks(){
@@ -104,5 +103,34 @@ public class LibraryManagementSystem {
             }
         }
         return false;
+    }
+
+    public boolean registerClient(String mail, String login, String password, String name, String lastName, long pesel){
+        for (Account user : users) {
+            if(user.getMail().equals(mail))
+                return false;
+        }
+        Client client = new Client(mail,login,password,name,lastName,pesel);
+        try {
+            DatabaseConnection.saveUser(client);
+            users.add(client);
+            refreshData();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+
+    }
+
+    public void logout(){
+        loggedUser = null;
+    }
+
+    private void refreshData(){
+        if(loggedUser != null)
+            loggedUser = DatabaseConnection.refreshUser(loggedUser);
+        books = DatabaseConnection.refreshBooks(books);
+        users = DatabaseConnection.refreshUsers(users);
+        //getData();
     }
 }

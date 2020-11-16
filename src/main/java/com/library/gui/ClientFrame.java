@@ -52,14 +52,24 @@ public class ClientFrame implements GetsPanel {
                 cancelReservation();
             }
         });
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LibraryManagementSystem.getSystem().logout();
+                MainFrame.getFrame().setPanel(new LoginFrame());
+            }
+        });
     }
 
     private void cancelReservation(){
         int row = myReservationsTable.getSelectedRow();
-        BookReservation reservation = bookReservationMap.get(row);
-        System.out.println(row);
-        LibraryManagementSystem.getSystem().cancelReservation(reservation);
-        inflateMyReservationsTable();
+        if(row>=0) {
+            BookReservation reservation = bookReservationMap.get(row);
+            LibraryManagementSystem.getSystem().cancelReservation(reservation);
+            inflateMyReservationsTable();
+        }else{
+            int option = JOptionPane.showConfirmDialog(null,JOptionPane.ERROR_MESSAGE,"Prosze wybrac rezerwacje",JOptionPane.ERROR);
+        }
     }
 
     private void reserve(){
@@ -68,12 +78,16 @@ public class ClientFrame implements GetsPanel {
         if(row >=0) {
             try {
                 new InputReservation(book).input();
-            } catch (WrongReservationInputException | BookNotAvailableException ignored) {
-                JOptionPane.showConfirmDialog(null,null,"Zle Dane",JOptionPane.ERROR_MESSAGE);
+                inflateMyReservationsTable();
+            } catch (WrongReservationInputException e) {
+                JOptionPane.showConfirmDialog(null,JOptionPane.ERROR_MESSAGE,"Zle Dane",JOptionPane.ERROR_MESSAGE);
+            }catch (BookNotAvailableException e){
+                JOptionPane.showConfirmDialog(null,JOptionPane.ERROR_MESSAGE,"Ksiazka niedostepna",JOptionPane.ERROR_MESSAGE);
             }
         }else{
             int option = JOptionPane.showConfirmDialog(null,null,"Prosze wybrac ksiazke",JOptionPane.ERROR_MESSAGE);
         }
+
     }
 
     private void initAllBooksTable(){

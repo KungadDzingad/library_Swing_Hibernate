@@ -51,13 +51,13 @@ public class InputReservation implements Inputs<BookReservation>{
         int option = JOptionPane.showConfirmDialog(null,objects,frameTitle,JOptionPane.OK_CANCEL_OPTION);
         if(option == JOptionPane.OK_OPTION) {
             int fromYear = Integer.parseInt(fromYearTextField.getText()) - 1900;
-            int fromMonth = Integer.parseInt(fromMonthTextField.getText());
+            int fromMonth = Integer.parseInt(fromMonthTextField.getText()) -1;
             int fromDay = Integer.parseInt(fromDayTextField.getText());
             int toYear = Integer.parseInt(toYearTextField.getText()) - 1900;
-            int toMonth = Integer.parseInt(toMonthTextField.getText());
+            int toMonth = Integer.parseInt(toMonthTextField.getText()) -1 ;
             int toDay = Integer.parseInt(toDayTextField.getText());
 
-            if(fromMonth > 12 || toMonth> 12|| toDay > 31 || fromDay>31)
+            if(fromMonth > 11 || toMonth> 11|| toDay > 31 || fromDay>31)
                 throw new WrongReservationInputException();
 
             Date from = new Date(fromYear,fromMonth,fromDay);
@@ -65,7 +65,7 @@ public class InputReservation implements Inputs<BookReservation>{
 
 
             LibraryManagementSystem.getSystem().addClientReservation(book,from,to);
-
+            return;
         }
 
         throw new WrongReservationInputException();

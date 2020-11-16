@@ -18,6 +18,12 @@ public class StartForm implements GetsPanel{
                 MainFrame.getFrame().setPanel(new LoginFrame());
             }
         });
+        registerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.getFrame().setPanel(new RegisterFrame());
+            }
+        });
     }
 
     @Override
