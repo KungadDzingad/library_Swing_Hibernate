@@ -1,17 +1,39 @@
 package com.library.dao;
 
-import com.library.Account;
-import com.library.Book;
-import com.library.DatabaseConnection;
-import com.library.LibraryManagementSystem;
+import com.library.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookDao extends GeneralDao<Book> {
+
+//    @Override
+//    public void save(Book book) {
+//        EntityManager manager = DatabaseConnection.getManager();
+//        EntityTransaction transaction = null;
+//        try{
+//            transaction = manager.getTransaction();
+//            transaction.begin();
+//
+//            for (BookItem bookItem : book.getBookItems()) {
+//               try{
+//                   manager.persist(bookItem);
+//               }catch(Exception ignored){}
+//            }
+//
+//            manager.persist(book);
+//
+//            transaction.commit();
+//
+//        } catch (Exception e) {
+//            if(transaction!=null)transaction.rollback();
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public List<Book> getAll() {

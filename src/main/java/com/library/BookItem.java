@@ -17,11 +17,12 @@ public class BookItem implements Serializable {
             nullable = false,
             unique = true
     )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long signature;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="book_id")
-    private Book book;
+    private Book book ;
 
     @OneToMany(mappedBy = "bookItem",
             orphanRemoval = true,
@@ -30,11 +31,10 @@ public class BookItem implements Serializable {
     private List<BookReservation> reservations = new ArrayList<>();
 
     @OneToOne(orphanRemoval = true)
-    @JoinColumn(name="book_lending_id")
+    @JoinColumn(name="book_lending_id",nullable = true)
     private BookLending lending;
 
-    public BookItem(long signature, Book book) {
-        this.signature = signature;
+    public BookItem(Book book) {
         this.book = book;
         this.reservations = new ArrayList<>();
         this.lending = null;

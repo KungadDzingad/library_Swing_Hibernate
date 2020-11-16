@@ -30,23 +30,33 @@ public class Book implements Serializable{
     private int numberOfPages;
 
     @OneToMany(mappedBy = "book",
-            orphanRemoval = true,
-            cascade = CascadeType.ALL
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
     private List<BookItem> bookItems  = new ArrayList<>();
 
-    public Book(String title, long isbn, String author, String category, String publisher, int numberOfPages) {
+    public Book( long isbn,String title, String author, String category, String publisher, int numberOfPages, int howManyBookItems) {
         this.title = title;
         this.isbn = isbn;
         this.author = author;
         this.category = category;
         this.publisher = publisher;
         this.numberOfPages = numberOfPages;
-
+        for (int i = 0; i < howManyBookItems; i++) {
+            bookItems.add(new BookItem(this));
+        }
     }
 
     public Book() {
 
+    }
+
+    public void addBookItems(int howMany){
+        if(bookItems == null)
+            bookItems = new ArrayList<>();
+        for (int i = 0; i < howMany; i++) {
+            bookItems.add(new BookItem(this));
+        }
     }
 
     public boolean isAvailable(){

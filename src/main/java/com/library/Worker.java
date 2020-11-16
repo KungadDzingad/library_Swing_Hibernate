@@ -20,6 +20,8 @@ public class Worker extends Account{
 
     public Worker(){}
 
+
+
     @Override
     public BookReservation reserveBook(Book book, Date from, Date to) throws BookNotAvailableException {
         return null;
@@ -39,5 +41,9 @@ public class Worker extends Account{
 
     public Book searchBook(String query) {
         return null;
+    }
+
+    public long getWorkerID() {
+        return workerID;
     }
 }

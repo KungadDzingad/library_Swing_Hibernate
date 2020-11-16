@@ -17,8 +17,8 @@ import java.util.Map;
 public class ClientFrame implements GetsPanel {
 
 
-    private static Map<Integer, BookReservation> bookReservationMap;
-    private static Map<Integer, Book> bookMap;
+    private  Map<Integer, BookReservation> bookReservationMap;
+    private  Map<Integer, Book> bookMap;
 
     private JPanel root;
     private JLabel welcomeLabel;

@@ -47,18 +47,6 @@ public class LibraryManagementSystem {
         return null;
     }
 
-    private Book createBook(String title, long isbn, String author, String category, String publisher, int numberOfPages) {
-        Book book = new Book(title,isbn,author,category,publisher,numberOfPages);
-        DatabaseConnection.saveBook(book);
-        return book;
-    }
-
-    private BookItem createBookItem(long signature, Book book){
-        BookItem bookItem = new BookItem(signature,book);
-        DatabaseConnection.saveBookItem(bookItem);
-        return bookItem;
-    }
-
     private void deleteBookItem(BookItem item){
         for (Book book : books) {
             for (BookItem bookItem : book.getBookItems()) {
@@ -105,6 +93,18 @@ public class LibraryManagementSystem {
         return false;
     }
 
+    public boolean loginWorker(String login, String password){
+        for (Account user : users) {
+            if(user instanceof Worker){
+                if(user.getLogin().equals(login) && user.getPassword().equals(password)) {
+                    loggedUser = user;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean registerClient(String mail, String login, String password, String name, String lastName, long pesel){
         for (Account user : users) {
             if(user.getMail().equals(mail))
@@ -120,6 +120,25 @@ public class LibraryManagementSystem {
             return false;
         }
 
+    }
+
+    public void addNewBook(long isbn,String title, String author, String category, String publisher, int numberOfPages, int howManyBookItems){
+        boolean bookExists = false;
+        for (Book book : books) {
+            if(book.getIsbn() == isbn){
+                book.addBookItems(howManyBookItems);
+                bookExists = true;
+                break;
+            }
+        }
+        if(!bookExists){
+            try {
+                Book book = new Book(isbn, title, author, category, publisher, numberOfPages, howManyBookItems);
+                DatabaseConnection.saveBook(book);
+                books.add(book);
+            } catch (Exception ignored) { }
+        }
+        refreshData();
     }
 
     public void logout(){

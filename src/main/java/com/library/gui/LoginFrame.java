@@ -31,7 +31,12 @@ public class LoginFrame implements GetsPanel{
                 String login = loginField.getText();
                 String password = passwordField.getText();
                 if(jestemPracownikiemCheckBox.isSelected()){
-
+                   if(LibraryManagementSystem.getSystem().loginWorker(login,password)){
+                        MainFrame.getFrame().setPanel(new WorkerFrame());
+                   }else{
+                       wrongDataLabel.setVisible(true);
+                       MainFrame.getFrame().pack();
+                   }
                 }else{
                     boolean logged = LibraryManagementSystem.getSystem().loginUser(login,password);
                     if(logged) {
