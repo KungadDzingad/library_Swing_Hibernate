@@ -1,14 +1,23 @@
 package com.library.gui;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class StartFrame implements GetsPanel{
+public class StartForm implements GetsPanel{
     private JPanel root;
+    private JButton loginButton;
+    private JButton registerButton;
 
-    private SetsPanel panelSetter;
 
-    public StartFrame(SetsPanel setsPanel){
-        panelSetter = setsPanel;
+    public StartForm(){
+
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainFrame.getFrame().setPanel(new LoginFrame());
+            }
+        });
     }
 
     @Override

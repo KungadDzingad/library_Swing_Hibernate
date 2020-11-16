@@ -3,7 +3,8 @@ package com.library;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Calendar;
+import java.sql.Date;
 
 @Entity
 @Table(name="book_reservation")
@@ -14,11 +15,11 @@ public class BookReservation  implements Serializable {
     private long id;
 
     @Column(name="date_from")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     private Date from;
 
     @Column(name="date_to")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     private Date to;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -29,6 +30,14 @@ public class BookReservation  implements Serializable {
     @JoinColumn(name="client_id",referencedColumnName = "library_card")
     private Client client;
 
+    public BookReservation(){}
+
+    public BookReservation(Date from, Date to, BookItem bookItem, Account client) {
+        this.from = from;
+        this.to = to;
+        this.bookItem = bookItem;
+        this.client = (Client)client;
+    }
 
     public long getId() {
         return id;

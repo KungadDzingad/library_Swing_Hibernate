@@ -1,10 +1,12 @@
 package com.library;
 
+import com.library.exceptions.BookNotAvailableException;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity
@@ -40,6 +42,31 @@ public class Client  extends Account {
         return false;
     }
 
+    @Override
+    public BookReservation reserveBook(Book book, Date from, Date to) throws BookNotAvailableException{
+        boolean[] canReserve = new boolean[book.getBookItems().size()];
+
+        int i = 0;
+        for (BookItem bookItem : book.getBookItems()) {
+            canReserve[i] = true;
+            for (BookReservation reservation : bookItem.getReservations()) {
+                if (reservation.getFrom().compareTo(to) < 0 || reservation.getTo().compareTo(from) > 0) {
+                    canReserve[i] = false;
+                    break;
+                }
+            }
+        }
+        for (int j = 0; j < canReserve.length; j++) {
+            if (canReserve[j]) {
+                BookItem bookItem = book.getBookItems().get(j);
+                BookReservation reservation = new BookReservation(from, to, bookItem, this);
+                return reservation;
+            }
+        }
+        throw new BookNotAvailableException();
+    }
+
+    @Override
     public void cancelReservation() {
 
     }

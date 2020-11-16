@@ -7,9 +7,6 @@ import java.util.List;
 
 public class BookLendingDao extends GeneralDao<BookLending> {
 
-    public BookLendingDao(EntityManagerFactory factory) {
-        super(factory);
-    }
 
     @Override
     public List<BookLending> getAll() {

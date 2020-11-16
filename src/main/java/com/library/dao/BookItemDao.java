@@ -1,6 +1,8 @@
 package com.library.dao;
 
 import com.library.BookItem;
+import com.library.DatabaseConnection;
+import com.library.LibraryManagementSystem;
 import com.mysql.cj.Session;
 
 import javax.persistence.EntityManager;
@@ -11,15 +13,13 @@ import java.util.List;
 
 public class BookItemDao extends GeneralDao<BookItem> {
 
-    public BookItemDao(EntityManagerFactory factory) {
-        super(factory);
-    }
+
 
     @Override
     public List<BookItem> getAll() {
         List<BookItem> bookItems = null;
 
-        EntityManager manager = factory.createEntityManager();
+        EntityManager manager = DatabaseConnection.getManager();
         String query = "SELECT b FROM BookItem b";
         TypedQuery<BookItem> tq = manager.createQuery(query, BookItem.class);
         try{
@@ -33,7 +33,7 @@ public class BookItemDao extends GeneralDao<BookItem> {
 
     @Override
     public void delete(BookItem t) {
-        EntityManager entityManager = factory.createEntityManager();
+        EntityManager entityManager = DatabaseConnection.getManager();
         EntityTransaction transaction = null;
         try{
             transaction = entityManager.getTransaction();

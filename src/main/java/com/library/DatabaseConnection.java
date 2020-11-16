@@ -8,39 +8,49 @@ import javax.persistence.Persistence;
 import java.util.List;
 
 public class DatabaseConnection {
-    private static final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("library");
+    private static  final EntityManagerFactory ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory("library");
 
-    private static final BookDao BOOK_DAO = new BookDao(ENTITY_MANAGER_FACTORY);
-    private static final BookItemDao BOOK_ITEM_DAO = new BookItemDao(ENTITY_MANAGER_FACTORY);
-    private static final BookReservationDao BOOK_RESERVATION_DAO = new BookReservationDao(ENTITY_MANAGER_FACTORY);
-    private static final BookLendingDao BOOK_LENDING_DAO = new BookLendingDao(ENTITY_MANAGER_FACTORY);
-    private static final AccountDao ACCOUNT_DAO = new AccountDao(ENTITY_MANAGER_FACTORY);
+//    private static final BookDao BOOK_DAO= new BookDao() ;
+//    private static final BookItemDao BOOK_ITEM_DAO = new BookItemDao();
+//    private static final BookReservationDao BOOK_RESERVATION_DAO = new BookReservationDao();
+//    private static final BookLendingDao BOOK_LENDING_DAO = new BookLendingDao();
+//    private static final AccountDao ACCOUNT_DAO = new AccountDao();
 
+    private DatabaseConnection(){}
     public static List<Book> getBooks(){
-        return BOOK_DAO.getAll();
+        return new BookDao().getAll();
     }
 
     public static List<Account> getAccounts(){
-        return ACCOUNT_DAO.getAll();
+        return new AccountDao().getAll();
     }
 
     public static void saveBook(Book book){
-        BOOK_DAO.save(book);
+        new BookDao().save(book);
     }
 
     public static void saveBookItem(BookItem bookItem){
-        BOOK_ITEM_DAO.save(bookItem);
+        new BookItemDao().save(bookItem);
     }
 
     public static void removeBookitem(BookItem bookItem){
-        BOOK_ITEM_DAO.delete(bookItem);
+        new BookItemDao().delete(bookItem);
     }
 
     public static EntityManager getManager() {
         return ENTITY_MANAGER_FACTORY.createEntityManager();
     }
 
-    public static void factoryClose(){
+    public static void saveBookReservation(BookReservation bookReservation){
+        new BookReservationDao().save(bookReservation);
+    }
+
+    public static void removeReservation(BookReservation reservation){
+        System.out.println("elo");
+        new BookReservationDao().delete(reservation);
+    }
+
+    public static  void factoryClose(){
         ENTITY_MANAGER_FACTORY.close();
     }
 }

@@ -1,8 +1,12 @@
 package com.library;
 
 
+import com.library.exceptions.BookNotAvailableException;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
+import java.sql.Date;
 
 @Entity
 @Table(name = "account")
@@ -40,6 +44,7 @@ public abstract class Account implements Serializable {
 
     }
 
+    public abstract BookReservation reserveBook(Book book, Date from, Date to) throws BookNotAvailableException;
     public abstract boolean verify();
     public abstract void cancelReservation();
     public abstract Book searchBook();

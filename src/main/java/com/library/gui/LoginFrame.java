@@ -1,20 +1,40 @@
 package com.library.gui;
 
-import javax.swing.*;
+import com.library.Account;
+import com.library.LibraryManagementSystem;
 
-public class LoginForm implements GetsPanel{
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public class LoginFrame implements GetsPanel{
 
 
     private JPanel root;
-    private JButton button1;
+    private JButton loginButton;
     private JPasswordField passwordField;
     private JTextField loginField;
     private JCheckBox jestemPracownikiemCheckBox;
 
-    private SetsPanel setter;
 
-    public LoginForm(SetsPanel panelSetter){
-        setter = panelSetter;
+    public LoginFrame( ){
+
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String login = loginField.getText();
+                String password = passwordField.getText();
+                if(jestemPracownikiemCheckBox.isSelected()){
+
+                }else{
+                    boolean logged = LibraryManagementSystem.getSystem().loginUser(login,password);
+                    if(logged) {
+                        MainFrame.getFrame().setPanel(new ClientFrame());
+                    }
+                }
+            }
+        });
     }
 
     @Override

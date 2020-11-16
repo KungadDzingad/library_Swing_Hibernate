@@ -4,6 +4,7 @@ import com.sun.istack.Nullable;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,5 +60,9 @@ public class BookItem implements Serializable {
 
     public BookLending getLending(){
         return lending;
+    }
+
+    public boolean isAvailableInThatPeriod(Date from, Date to){
+        return true;
     }
 }

@@ -1,6 +1,9 @@
 package com.library;
 
+import com.library.exceptions.BookNotAvailableException;
+
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Table(name="worker")
@@ -16,6 +19,11 @@ public class Worker extends Account{
     }
 
     public Worker(){}
+
+    @Override
+    public BookReservation reserveBook(Book book, Date from, Date to) throws BookNotAvailableException {
+        return null;
+    }
 
     public boolean verify() {
         return false;

@@ -2,6 +2,7 @@ package com.library;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -13,11 +14,11 @@ public class BookLending  implements Serializable {
     private long id;
 
     @Column(name="lended_from")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     private Date from;
 
     @Column(name="lended_to")
-    @Temporal(TemporalType.DATE)
+    //@Temporal(TemporalType.DATE)
     private Date to;
 
     @OneToOne(mappedBy ="lending",cascade = CascadeType.ALL,optional = false)

@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Entity
 @Table(name="book")
 public class Book implements Serializable{
+
     @Id
     @Column(name="isbn",nullable = false, unique = true)
     private long isbn;
@@ -48,9 +49,22 @@ public class Book implements Serializable{
 
     }
 
+    public boolean isAvailable(){
+
+        int counter = 0;
+        for (BookItem bookItem : bookItems) {
+            if(bookItem.isLended())
+                counter++;
+        }
+        if(counter == bookItems.size())
+            return false;
+        return true;
+    }
+
     public long getIsbn(){
         return isbn;
     }
+
     public List<BookItem> getBookItems(){
         return bookItems;
     }
@@ -74,4 +88,5 @@ public class Book implements Serializable{
     public int getNumberOfPages() {
         return numberOfPages;
     }
+
 }

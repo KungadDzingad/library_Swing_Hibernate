@@ -1,21 +1,19 @@
 package com.library.dao;
 
 import com.library.Account;
+import com.library.DatabaseConnection;
+import com.library.LibraryManagementSystem;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 public abstract class GeneralDao<T> implements DAO<T>{
-    protected EntityManagerFactory factory;
 
-    public GeneralDao(EntityManagerFactory factory){
-        this.factory = factory;
-    }
 
     @Override
     public void save(T t) {
-        EntityManager manager = factory.createEntityManager();
+        EntityManager manager = DatabaseConnection.getManager();
         EntityTransaction transaction = null;
         try{
             transaction = manager.getTransaction();
@@ -33,7 +31,7 @@ public abstract class GeneralDao<T> implements DAO<T>{
 
     @Override
     public void delete(T t) {
-        EntityManager entityManager = factory.createEntityManager();
+        EntityManager entityManager = DatabaseConnection.getManager();
         EntityTransaction transaction = null;
         try{
             transaction = entityManager.getTransaction();
