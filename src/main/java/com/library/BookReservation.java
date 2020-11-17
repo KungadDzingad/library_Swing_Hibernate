@@ -51,6 +51,10 @@ public class BookReservation  implements Serializable {
         return to;
     }
 
+    public Client getClient() {
+        return client;
+    }
+
     public BookItem getBookItem() {
         return bookItem;
     }

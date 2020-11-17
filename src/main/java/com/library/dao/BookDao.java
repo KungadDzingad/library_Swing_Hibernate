@@ -69,4 +69,24 @@ public class BookDao extends GeneralDao<Book> {
         }
         return booksRefreshed;
     }
+
+    @Override
+    public void delete(Book t) {
+        EntityManager entityManager = DatabaseConnection.getManager();
+        EntityTransaction transaction = null;
+        try{
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+            Book book = entityManager.find(Book.class, t.getIsbn());
+            entityManager.remove(book);
+            transaction.commit();
+
+        } catch (Exception e) {
+            if(transaction!=null)
+                transaction.rollback();
+            e.printStackTrace();
+        }
+
+    }
+
 }

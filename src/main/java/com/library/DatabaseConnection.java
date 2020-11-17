@@ -54,6 +54,10 @@ public class DatabaseConnection {
         ENTITY_MANAGER_FACTORY.close();
     }
 
+    public static void removeBook(Book book){
+        new BookDao().delete(book);
+    }
+
     public static void saveUser(Account account){
         new AccountDao().save(account);
     }
@@ -68,5 +72,9 @@ public class DatabaseConnection {
 
     public static List<Account> refreshUsers(List<Account> users){
         return new AccountDao().refresh(users);
+    }
+
+    public static void removeAccount(Account account){
+        new AccountDao().delete(account);
     }
 }

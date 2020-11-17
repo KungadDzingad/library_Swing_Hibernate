@@ -56,6 +56,24 @@ public class WorkerFrame implements GetsPanel{
                 addBook();
             }
         });
+        deleteBookButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeBook();
+            }
+        });
+        deleteReservationButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeReservation();
+            }
+        });
+        deleteClientButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeClient();
+            }
+        });
     }
 
     private void addBook(){
@@ -65,6 +83,32 @@ public class WorkerFrame implements GetsPanel{
             JOptionPane.showMessageDialog(null,JOptionPane.ERROR_MESSAGE,"Nie udalo sie stworzyc ksiazki",JOptionPane.ERROR_MESSAGE);
         }
         inflateAllBooksTable();
+    }
+
+    private void removeClient(){
+        int row = clientTable.getSelectedRow();
+        if(row>=0){
+            LibraryManagementSystem.getSystem().removeClient(clientMap.get(row));
+            inflateClientTable();
+        }
+    }
+
+    private void removeBook(){
+        int row = bookTable.getSelectedRow();
+        if(row >=0){
+            Book book = bookMap.get(row);
+            LibraryManagementSystem.getSystem().removeBook(book);
+            inflateAllBooksTable();
+        }
+    }
+
+    private void removeReservation(){
+        int row = reservationTable.getSelectedRow();
+        if(row >= 0){
+            BookReservation reservation = bookReservationMap.get(row);
+            LibraryManagementSystem.getSystem().cancelReservation(reservation);
+            inflateReservationTable();
+        }
     }
 
     private void initAllBooksTable(){

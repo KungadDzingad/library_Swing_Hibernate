@@ -121,14 +121,11 @@ public class LibraryManagementSystem {
                 return false;
         }
         Client client = new Client(mail,login,password,name,lastName,pesel);
-        try {
+
             DatabaseConnection.saveUser(client);
             users.add(client);
-            refreshData();
             return true;
-        } catch (Exception e) {
-            return false;
-        }
+
 
     }
 
@@ -149,6 +146,16 @@ public class LibraryManagementSystem {
             } catch (Exception ignored) { }
         }
         refreshData();
+    }
+
+    public void removeBook(Book book){
+        books.remove(book);
+        DatabaseConnection.removeBook(book);
+    }
+
+    public void removeClient(Client client){
+        users.remove(client);
+        DatabaseConnection.removeAccount(client);
     }
 
     public void logout(){

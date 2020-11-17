@@ -45,4 +45,25 @@ public class AccountDao extends GeneralDao<Account> {
         }
         return accountsRefreshed;
     }
+
+    @Override
+    public void delete(Account t) {
+        EntityManager entityManager = DatabaseConnection.getManager();
+        EntityTransaction transaction = null;
+        try{
+            transaction = entityManager.getTransaction();
+            transaction.begin();
+
+            Account a = entityManager.find(Account.class, t.getMail());
+            entityManager.remove(a);
+
+            transaction.commit();
+
+        } catch (Exception e) {
+            if(transaction!=null)
+                transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+
 }
