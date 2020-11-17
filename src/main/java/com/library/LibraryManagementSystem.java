@@ -62,12 +62,6 @@ public class LibraryManagementSystem {
             DatabaseConnection.saveBookReservation(bookReservation);
             refreshData();
         }
-
-        for (BookItem bookItem : book.getBookItems()) {
-            for (BookReservation reservation : bookItem.getReservations()) {
-                System.out.println(reservation.getId());
-            }
-        }
     }
 
     public void cancelReservation(BookReservation reservation){
@@ -120,9 +114,10 @@ public class LibraryManagementSystem {
             if(user.getMail().equals(mail))
                 return false;
         }
-        Client client = new Client(mail,login,password,name,lastName,pesel);
+        Account client = new Client(mail,login,password,name,lastName,pesel);
 
             DatabaseConnection.saveUser(client);
+            client = DatabaseConnection.refreshUser(client);
             users.add(client);
             return true;
 

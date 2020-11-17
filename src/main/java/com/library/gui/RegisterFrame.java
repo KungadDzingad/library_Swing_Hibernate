@@ -19,8 +19,10 @@ public class RegisterFrame implements GetsPanel{
     private JTextField lastNameTextField;
     private JPasswordField repeatPasswordTextField;
     private JLabel errorLabel;
+    private JLabel registerLabel;
 
     public RegisterFrame(){
+        registerLabel.setText("Witamy, Prosze sie zarejestrowac");
         errorLabel.setVisible(false);
         zarejestrujButton.addActionListener(new ActionListener() {
             @Override
