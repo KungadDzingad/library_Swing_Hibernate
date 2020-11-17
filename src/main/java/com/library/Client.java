@@ -61,6 +61,7 @@ public class Client  extends Account {
             if (canReserve[j]) {
                 BookItem bookItem = book.getBookItems().get(j);
                 BookReservation reservation = new BookReservation(from, to, bookItem, this);
+                bookItem.getReservations().add(reservation);
                 return reservation;
             }
         }

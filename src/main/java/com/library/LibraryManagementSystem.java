@@ -30,12 +30,12 @@ public class LibraryManagementSystem {
 
     private LibraryManagementSystem(){
         loggedUser = null;
-        getData();
+        users = DatabaseConnection.getAccounts();
     }
 
 
     private void getData(){
-        books = DatabaseConnection.getBooks();
+
         users = DatabaseConnection.getAccounts();
     }
 
@@ -62,6 +62,12 @@ public class LibraryManagementSystem {
             DatabaseConnection.saveBookReservation(bookReservation);
             refreshData();
         }
+
+        for (BookItem bookItem : book.getBookItems()) {
+            for (BookReservation reservation : bookItem.getReservations()) {
+                System.out.println(reservation.getId());
+            }
+        }
     }
 
     public void cancelReservation(BookReservation reservation){
@@ -86,10 +92,12 @@ public class LibraryManagementSystem {
             if(user instanceof Client){
                 if(user.getLogin().equals(login) && user.getPassword().equals(password)) {
                     loggedUser = user;
+                    books = DatabaseConnection.getBooks();
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -98,10 +106,12 @@ public class LibraryManagementSystem {
             if(user instanceof Worker){
                 if(user.getLogin().equals(login) && user.getPassword().equals(password)) {
                     loggedUser = user;
+                    books = DatabaseConnection.getBooks();
                     return true;
                 }
             }
         }
+
         return false;
     }
 
