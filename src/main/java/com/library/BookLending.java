@@ -21,7 +21,7 @@ public class BookLending  implements Serializable {
     //@Temporal(TemporalType.DATE)
     private Date to;
 
-    @OneToOne(mappedBy ="lending",cascade = CascadeType.ALL,optional = false)
+    @OneToOne(mappedBy ="lending",optional = false)
     private BookItem bookItem;
 
     @ManyToOne
